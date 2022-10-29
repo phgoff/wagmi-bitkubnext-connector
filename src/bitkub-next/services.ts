@@ -4,7 +4,7 @@ import type {
   AccountInformationType,
 } from "./types";
 
-import { storageKeys } from "./constants";
+import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
 
 const BITKUB_ACCOUNT_URL = "https://accounts.bitkubnext.com";
@@ -13,16 +13,20 @@ const BITKUB_ACCOUNT_API = "https://api.bitkubnext.io/accounts";
 export const getAccountInformation = async (
   accessToken: string
 ): Promise<AccountInformationType> => {
-  const url = `${BITKUB_ACCOUNT_API}/auth/info`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-  };
+  try {
+    const url = `${BITKUB_ACCOUNT_API}/auth/info`;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
 
-  const response = await fetch(url, {
-    headers,
-  });
-  const result: AccountInformationType = await response.json();
-  return result;
+    const response = await fetch(url, {
+      headers,
+    });
+    const result: AccountInformationType = await response.json();
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getOAuth2AuthorizeURL = (
@@ -44,52 +48,60 @@ export const exchangeAuthorizationCode = async (
   redirectURI: string,
   code: string
 ) => {
-  const url = `${BITKUB_ACCOUNT_URL}/oauth2/access_token`;
-  const headers = {
-    Authorization: Buffer.from(`${clientId}:`).toString("base64"),
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
-  const body = new URLSearchParams({
-    grant_type: "authorization_code",
-    client_id: clientId,
-    redirect_uri: redirectURI,
-    code: code,
-  });
+  try {
+    const url = `${BITKUB_ACCOUNT_URL}/oauth2/access_token`;
+    const headers = {
+      Authorization: Buffer.from(`${clientId}:`).toString("base64"),
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    const body = new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: clientId,
+      redirect_uri: redirectURI,
+      code: code,
+    });
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers,
-    body,
-  });
-  const result: AccessTokenType = await response.json();
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body,
+    });
+    const result: AccessTokenType = await response.json();
 
-  return result;
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const exchangeRefreshToken = async (
   clientId: string,
   refreshToken: string
 ) => {
-  const url = `${BITKUB_ACCOUNT_URL}/oauth2/access_token`;
-  const headers = {
-    Authorization: Buffer.from(`${clientId}:`).toString("base64"),
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
+  try {
+    const url = `${BITKUB_ACCOUNT_URL}/oauth2/access_token`;
+    const headers = {
+      Authorization: Buffer.from(`${clientId}:`).toString("base64"),
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
 
-  const body = new URLSearchParams({
-    grant_type: "refresh_token",
-    client_id: clientId,
-    refresh_token: refreshToken,
-  });
+    const body = new URLSearchParams({
+      grant_type: "refresh_token",
+      client_id: clientId,
+      refresh_token: refreshToken,
+    });
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers,
-    body,
-  });
-  const result: RefreshTokenType = await response.json();
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body,
+    });
+    const result: RefreshTokenType = await response.json();
 
-  return result;
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const connectBitkubNext = async (
@@ -99,8 +111,8 @@ export const connectBitkubNext = async (
   if (typeof window === "undefined") {
     return null;
   }
-  let accountToken = localStorage.getItem(storageKeys.ACCESS_TOKEN);
-  let refreshToken = localStorage.getItem(storageKeys.REFRESH_TOKEN);
+  let accountToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
+  let refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
 
   try {
     if (refreshToken) {
@@ -126,8 +138,8 @@ export const connectBitkubNext = async (
       const resultToken = await requestWindow(
         tapWindow!,
         authorizeBitkubNextUrl,
-        storageKeys.RESULT,
-        storageKeys.RESULT_ERROR
+        storageKey.RESULT,
+        storageKey.RESULT_ERROR
       );
 
       if (!resultToken.access_token || !resultToken.refresh_token) {
@@ -138,8 +150,8 @@ export const connectBitkubNext = async (
       refreshToken = resultToken.refresh_token;
     }
 
-    localStorage.setItem(storageKeys.ACCESS_TOKEN, accountToken);
-    localStorage.setItem(storageKeys.REFRESH_TOKEN, refreshToken);
+    localStorage.setItem(storageKey.ACCESS_TOKEN, accountToken);
+    localStorage.setItem(storageKey.REFRESH_TOKEN, refreshToken);
 
     const information = await getAccountInformation(accountToken);
     const address = information.data.wallet_address;

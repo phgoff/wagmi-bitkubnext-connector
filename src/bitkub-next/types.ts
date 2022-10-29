@@ -1,3 +1,5 @@
+export type NetworkMode = "mainnet" | "testnet";
+
 export type AccessTokenType = {
   access_token: string;
   expires_in: number;

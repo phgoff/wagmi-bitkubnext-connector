@@ -1,6 +1,6 @@
 {
   "name": "wagmi-bitkubnext-connector",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "use bitkubnext as a wagmi connector",
   "author": "phgoff",
   "license": "ISC",

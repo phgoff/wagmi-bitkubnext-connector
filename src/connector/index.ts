@@ -1,9 +1,8 @@
 import { Connector, Chain } from "wagmi";
 import { providers } from "ethers";
 import { getAddress } from "ethers/lib/utils";
-import { connectBitkubNext } from "../bitkub-next";
-
-declare type NetworkMode = "mainnet" | "testnet";
+import { connectBitkubNext, NetworkMode } from "../bitkub-next";
+import { chains as bitkubChains } from "../bitkub-next/chains";
 
 declare type Options = {
   /**
@@ -13,39 +12,6 @@ declare type Options = {
   networkMode: NetworkMode;
   clientId: string;
   oauthRedirectURI: string;
-};
-
-const bitkubChains: Record<NetworkMode, Chain> = {
-  mainnet: {
-    id: 97,
-    name: "Bitkub Chain",
-    network: "bitkub",
-    nativeCurrency: { name: "Kub", symbol: "KUB", decimals: 18 },
-    rpcUrls: {
-      default: "https://rpc.bitkubchain.io",
-    },
-    blockExplorers: {
-      default: {
-        name: "Bitkub Explorer",
-        url: "https://www.bkcscan.com",
-      },
-    },
-  },
-  testnet: {
-    id: 25925,
-    name: "Bitkub Chain Testnet",
-    network: "bitkubTestnet",
-    nativeCurrency: { name: "Kub", symbol: "KUB", decimals: 18 },
-    rpcUrls: {
-      default: "https://rpc-testnet.bitkubchain.io",
-    },
-    blockExplorers: {
-      default: {
-        name: "Bitkub Testnet Explorer",
-        url: "https://testnet.bkcscan.com",
-      },
-    },
-  },
 };
 
 export class BitkubNextConnector extends Connector<
