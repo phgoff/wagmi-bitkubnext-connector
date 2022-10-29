@@ -1,4 +1,4 @@
-export const STORAGE_KEY = {
+export const storageKeys = {
   ACCESS_TOKEN: "bk-access-token",
   REFRESH_TOKEN: "bk-refresh-token",
   RESULT: "bk-result",

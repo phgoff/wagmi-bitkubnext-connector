@@ -4,8 +4,7 @@ import type {
   AccountInformationType,
 } from "./types";
 
-import { STORAGE_KEY } from "./constants";
-import * as ls from "local-storage";
+import { storageKeys } from "./constants";
 import { requestWindow } from "./utils/request-window";
 
 const BITKUB_ACCOUNT_URL = "https://accounts.bitkubnext.com";
@@ -100,8 +99,8 @@ export const connectBitkubNext = async (
   if (typeof window === "undefined") {
     return null;
   }
-  let accountToken = ls.get<string>(STORAGE_KEY.ACCESS_TOKEN);
-  let refreshToken = ls.get<string>(STORAGE_KEY.REFRESH_TOKEN);
+  let accountToken = localStorage.getItem(storageKeys.ACCESS_TOKEN);
+  let refreshToken = localStorage.getItem(storageKeys.REFRESH_TOKEN);
 
   try {
     if (refreshToken) {
@@ -127,8 +126,8 @@ export const connectBitkubNext = async (
       const resultToken = await requestWindow(
         tapWindow!,
         authorizeBitkubNextUrl,
-        STORAGE_KEY.RESULT,
-        STORAGE_KEY.RESULT_ERROR
+        storageKeys.RESULT,
+        storageKeys.RESULT_ERROR
       );
 
       if (!resultToken.access_token || !resultToken.refresh_token) {
@@ -139,8 +138,8 @@ export const connectBitkubNext = async (
       refreshToken = resultToken.refresh_token;
     }
 
-    ls.set(STORAGE_KEY.ACCESS_TOKEN, accountToken);
-    ls.set(STORAGE_KEY.REFRESH_TOKEN, refreshToken);
+    localStorage.setItem(storageKeys.ACCESS_TOKEN, accountToken);
+    localStorage.setItem(storageKeys.REFRESH_TOKEN, refreshToken);
 
     const information = await getAccountInformation(accountToken);
     const address = information.data.wallet_address;

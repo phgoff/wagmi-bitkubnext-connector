@@ -1,7 +1,7 @@
 {
   "name": "wagmi-bitkubnext-connector",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "use bitkubnext as a wagmi connector",
   "author": "phgoff",
   "license": "ISC",
   "main": "lib/index.js",
@@ -15,8 +15,6 @@
   ],
   "dependencies": {
     "ethers": "^5.7.2",
-    "local-storage": "^2.0.0",
-    "ts-node": "^10.9.1",
     "wagmi": "^0.7.7"
   },
   "devDependencies": {
