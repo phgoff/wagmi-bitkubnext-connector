@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "lib": ["es2015", "DOM"],
+    "module": "commonjs",
+    "target": "es6",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "lib",
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react"
+  },
+  "include": ["src/**/*"]
+}
