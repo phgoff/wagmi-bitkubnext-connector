@@ -4,13 +4,9 @@ export const requestWindow = (
   tabWindow: Window,
   url: string,
   resultKey?: string,
-  errorKey?: string
+  errorKey?: string,
 ): Promise<RefreshTokenType> => {
   return new Promise((resolve, reject) => {
-    if (typeof window !== "undefined") {
-      return Promise.reject("window is undefined");
-    }
-
     tabWindow.location.href = url;
     const subscribeWindow = setInterval(() => {
       const isClosed = tabWindow.closed;
@@ -28,6 +24,6 @@ export const requestWindow = (
         }
         clearInterval(subscribeWindow);
       }
-    }, 500);
+    }, 1000);
   });
 };
