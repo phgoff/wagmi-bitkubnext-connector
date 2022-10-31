@@ -34,7 +34,7 @@ export const getOAuth2AuthorizeURL = (
   redirectURI: string
 ) => {
   const encodedRedirectUrl = encodeURIComponent(redirectURI);
-  let url =
+  const url =
     BITKUB_ACCOUNT_URL +
     `/oauth2/authorize?` +
     `response_type=code&` +
@@ -134,16 +134,16 @@ export const connectBitkubNext = async (
         authorizeBitkubNextUrl,
         "_blank",
         windowFeatures
-      );
+      )!;
       const resultToken = await requestWindow(
-        tapWindow!,
+        tapWindow,
         authorizeBitkubNextUrl,
         storageKey.RESULT,
         storageKey.RESULT_ERROR
       );
 
       if (!resultToken.access_token || !resultToken.refresh_token) {
-        throw Error("Cannot get access token");
+        throw Error("Token not found");
       }
 
       accountToken = resultToken.access_token;

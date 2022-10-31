@@ -20,7 +20,7 @@ export const chains: Record<NetworkMode, Chain> = {
   testnet: {
     id: 25925,
     name: "Bitkub Chain Testnet",
-    network: "bitkubTestnet",
+    network: "bitkub testnet",
     nativeCurrency: { name: "KUB", symbol: "KUB", decimals: 18 },
     rpcUrls: {
       default: "https://rpc-testnet.bitkubchain.io",

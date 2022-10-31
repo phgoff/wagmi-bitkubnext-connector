@@ -1,6 +1,6 @@
-import { Connector, Chain } from "wagmi";
 import { providers } from "ethers";
 import { getAddress } from "ethers/lib/utils";
+import { Chain, Connector } from "wagmi";
 import { connectBitkubNext, NetworkMode } from "../bitkub-next";
 import { chains as bitkubChains } from "../bitkub-next/chains";
 
@@ -33,7 +33,7 @@ export class BitkubNextConnector extends Connector<
   async getProvider() {
     if (!this.#provider) {
       this.#provider = new providers.JsonRpcProvider(
-        this.chains[0].rpcUrls.default
+        this.chains[0].rpcUrls.default,
       );
     }
     return this.#provider;
@@ -48,7 +48,7 @@ export class BitkubNextConnector extends Connector<
     try {
       const account = await connectBitkubNext(
         this.options.clientId,
-        this.options.oauthRedirectURI
+        this.options.oauthRedirectURI,
       );
       if (!account) {
         throw new Error("Failed to get account");
