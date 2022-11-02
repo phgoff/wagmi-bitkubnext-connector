@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "bitkubnext as a wagmi connector",
   "author": "phgoff",
-  "license": "ISC",
+  "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
