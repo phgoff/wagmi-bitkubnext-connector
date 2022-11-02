@@ -19,7 +19,7 @@ export class BitkubNextConnector extends Connector<
   Options,
   providers.JsonRpcSigner
 > {
-  readonly id = "bitkubnext";
+  readonly id = "bitkubNext";
   readonly name = "Bitkub Next";
   readonly ready = true;
 
@@ -54,7 +54,7 @@ export class BitkubNextConnector extends Connector<
         throw new Error("Failed to get account");
       }
 
-      localStorage.setItem("bitkubnext", account);
+      localStorage.setItem(this.id, account);
 
       return {
         account: getAddress(account),
@@ -74,12 +74,12 @@ export class BitkubNextConnector extends Connector<
       return;
     }
     this.#provider = undefined;
-    localStorage.removeItem("bitkubnext");
+    localStorage.removeItem(this.id);
   }
 
   async getAccount() {
     let account: string | null = null;
-    account = localStorage.getItem("bitkubnext");
+    account = localStorage.getItem(this.id);
     if (!account) throw new Error("Failed to get account");
     return getAddress(account);
   }
