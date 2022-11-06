@@ -1,7 +1,7 @@
 import { Chain } from "wagmi";
 import { NetworkMode } from "./types";
 
-export const chains: Record<NetworkMode, Chain> = {
+export const bitkubChains: Record<NetworkMode, Chain> = {
   mainnet: {
     id: 97,
     name: "Bitkub Chain",
