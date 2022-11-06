@@ -2,7 +2,7 @@
 
 Use a bitkubnext wallet as a wagmi connector!
 
-> _Currently, You can only use it to connect a wallet and read from the contract._.
+> _Currently, You can only use it to connect a wallet and read from the contract._
 
 ## Installation
 
