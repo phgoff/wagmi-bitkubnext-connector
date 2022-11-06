@@ -16,7 +16,8 @@ npm install wagmi-bitkubnext-connector
 import { createClient, configureChains } from "wagmi";
 import { BitkubNextConnector, bitkubChains } from "wagmi-bitkubnext-connector";
 
-const { provider } = configureChains([bitkubChains.mainnet], [
+const chains = [bitkubChains.mainnet, bitkubChains.testnet, /*...Other chains */]
+const { provider } = configureChains(chains, [
   jsonRpcProvider({
     priority: 0,
     rpc: (chain) => {
@@ -83,7 +84,7 @@ const CallBackPage = ({ code }: { code: string }) => {
           } else {
             localStorage.setItem(
               storageKey.RESULT_ERROR,
-              "failed to get access token",
+              "failed to get bitkubnext access token",
             );
           }
         }
