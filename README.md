@@ -2,7 +2,7 @@
 
 Use a bitkubnext wallet as a wagmi connector!
 
-> _Currently, you can only use it to connect a wallet and a getter functions._.
+> _Currently, You can only use it to connect a wallet and read from the contract._.
 
 ## Installation
 
@@ -13,10 +13,10 @@ npm install wagmi-bitkubnext-connector
 ## Usage
 
 ```tsx
-import { createClient } from "wagmi";
-import { BitkubNextConnector, chains } from "wagmi-bitkubnext-connector";
+import { createClient, configureChains } from "wagmi";
+import { BitkubNextConnector, bitkubChains } from "wagmi-bitkubnext-connector";
 
-const { provider } = configureChains([chains.mainnet], [
+const { provider } = configureChains([bitkubChains.mainnet], [
   jsonRpcProvider({
     priority: 0,
     rpc: (chain) => {
