@@ -54,7 +54,7 @@ const client = createClient({
 | clientId         | string          | true     |
 | oauthRedirectURI | string          | true     |
 
-## Callback page example in Next.js
+### Callback page example in Next.js
 
 ```tsx
 // page/oauth/callback.tsx
@@ -122,3 +122,7 @@ export const getServerSideProps = async (
 
 export default CallBackPage;
 ```
+
+## Contribute
+
+Feel free to contribute. Pull requests and issues are welcome!
