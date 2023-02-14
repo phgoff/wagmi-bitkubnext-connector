@@ -1,6 +1,6 @@
 {
   "name": "wagmi-bitkubnext-connector",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "bitkubnext as a wagmi connector",
   "author": "phgoff",
   "license": "MIT",
@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "ethers": "^5.7.2",
-    "wagmi": "^0.7.7"
+    "wagmi": "^0.11.5"
   },
   "devDependencies": {
     "typescript": "^4.8.3"

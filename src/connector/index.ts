@@ -29,7 +29,7 @@ export class BitkubNextConnector extends Connector<
   async getProvider() {
     if (!this.#provider) {
       this.#provider = new providers.JsonRpcProvider(
-        this.chains[0].rpcUrls.default,
+        this.chains[0].rpcUrls.default.http[0],
       );
     }
     return this.#provider;
