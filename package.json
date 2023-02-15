@@ -26,6 +26,9 @@
     "wagmi",
     "bitkubnext"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/phgoff/wagmi-bitkubnext-connector.git"
