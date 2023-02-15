@@ -1,5 +1,11 @@
 # wagmi-bitkubnext-connector
 
+## 0.2.2
+
+### Patch Changes
+
+- Update get address
+
 ## 0.2.1
 
 ### Patch Changes

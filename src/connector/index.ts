@@ -1,5 +1,4 @@
 import { providers } from "ethers";
-import { getAddress } from "ethers/lib/utils";
 import { Chain, Connector } from "@wagmi/core";
 import { connectBitkubNext, NetworkMode } from "../bitkub-next";
 import { bitkubChains } from "../bitkub-next/chains";
@@ -56,7 +55,7 @@ export class BitkubNextConnector extends Connector<
       localStorage.setItem(this.id, account);
 
       return {
-        account: getAddress(account),
+        account: await this.getAccount(),
         chain: {
           id: chainId,
           unsupported: false,
@@ -80,7 +79,7 @@ export class BitkubNextConnector extends Connector<
     let account: string | null = null;
     account = localStorage.getItem(this.id);
     if (!account) throw new Error("Failed to get bitkubnext account");
-    return getAddress(account);
+    return account as `0x${string}`;
   }
 
   async getChainId() {
