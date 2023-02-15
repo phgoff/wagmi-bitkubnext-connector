@@ -1,4 +1,4 @@
-import { Chain } from "wagmi";
+import { Chain } from "@wagmi/core";
 import { NetworkMode } from "./types";
 
 export const bitkubChains: Record<NetworkMode, Chain> = {

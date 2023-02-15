@@ -1,2 +1,2 @@
-export * from "./bitkub-next";
 export * from "./connector";
+export * from "./bitkub-next";

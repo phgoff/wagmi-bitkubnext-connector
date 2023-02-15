@@ -6,9 +6,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "sourceMap": true,
     "strict": true,
-    "outDir": "lib",
+    "outDir": "dist",
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react"

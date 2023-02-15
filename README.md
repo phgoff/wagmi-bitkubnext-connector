@@ -14,19 +14,7 @@ npm install wagmi-bitkubnext-connector
 
 ```tsx
 import { createClient, configureChains } from "wagmi";
-import { BitkubNextConnector, bitkubChains } from "wagmi-bitkubnext-connector";
-
-const chains = [bitkubChains.mainnet, bitkubChains.testnet, /*...Other chains */]
-const { provider } = configureChains(chains, [
-  jsonRpcProvider({
-    priority: 0,
-    rpc: (chain) => {
-      return {
-        http: chain.rpcUrls.default,
-      };
-    },
-  }),
-]);
+import { BitkubNextConnector } from "wagmi-bitkubnext-connector";
 
 const client = createClient({
   connectors: [
@@ -39,7 +27,6 @@ const client = createClient({
       },
     }),
   ],
-  provider
   // ...Other options
 });
 ```
@@ -48,11 +35,11 @@ const client = createClient({
 
 ### `options`
 
-| Key              | Value           | Required |
-| ---------------- | --------------- | -------- |
-| networkMode      | testnet,mainnet | true     |
-| clientId         | string          | true     |
-| oauthRedirectURI | string          | true     |
+| Key              | Value           | Required | Example                              |
+| ---------------- | --------------- | -------- | ------------------------------------ |
+| networkMode      | testnet,mainnet | true     | testnet                              |
+| clientId         | string          | true     | XXXXXX                               |
+| oauthRedirectURI | string          | true     | http://localhost:3000/oauth/callback |
 
 ### Callback page example in Next.js
 
