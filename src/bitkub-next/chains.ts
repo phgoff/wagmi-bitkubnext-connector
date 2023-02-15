@@ -8,7 +8,8 @@ export const bitkubChains: Record<NetworkMode, Chain> = {
     network: "bitkub",
     nativeCurrency: { name: "KUB", symbol: "KUB", decimals: 18 },
     rpcUrls: {
-      default: "https://rpc.bitkubchain.io",
+      default: { http: ["https://rpc.bitkubchain.io"] },
+      public: { http: ["https://rpc.bitkubchain.io"] },
     },
     blockExplorers: {
       default: {
@@ -23,7 +24,8 @@ export const bitkubChains: Record<NetworkMode, Chain> = {
     network: "bitkub testnet",
     nativeCurrency: { name: "KUB", symbol: "KUB", decimals: 18 },
     rpcUrls: {
-      default: "https://rpc-testnet.bitkubchain.io",
+      default: { http: ["https://rpc-testnet.bitkubchain.io"] },
+      public: { http: ["https://rpc-testnet.bitkubchain.io"] },
     },
     blockExplorers: {
       default: {
