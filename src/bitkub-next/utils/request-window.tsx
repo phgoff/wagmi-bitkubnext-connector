@@ -10,11 +10,10 @@ export const requestWindow = (
     tabWindow.location.href = url;
     const subscribeWindow = setInterval(() => {
       const isClosed = tabWindow.closed;
-      if (isClosed) {
+      if (isClosed && typeof window !== "undefined") {
         if (!resultKey) reject("Result key not found");
         const result = localStorage.getItem(resultKey!);
         const error = localStorage.getItem(errorKey!);
-
         if (result) {
           resolve(JSON.parse(result));
         } else if (error) {

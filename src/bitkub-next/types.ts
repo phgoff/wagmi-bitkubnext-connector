@@ -72,3 +72,14 @@ export type ApprovalResponse = {
     expires_in: number;
   };
 };
+
+export type BitkubNextCallerOptions = {
+  clientId: string;
+  network: NetworkMode;
+};
+
+export type ContractCall = {
+  contractAddr: string;
+  methodName: string;
+  methodParams: string[];
+};

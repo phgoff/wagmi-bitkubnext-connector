@@ -1,38 +1,46 @@
 import {
   ApprovalResponse,
+  BitkubNextCallerOptions,
   BitkubNextTXResponse,
   BitkubNextTXStatus,
+  ContractCall,
   NetworkMode,
 } from "./types";
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
+import axios from "axios";
 
 // BitkubNextCaller is a class that handles the communication with Bitkub Next Wallet.
 export class BitkubNextCaller {
   clientId: string;
   network: NetworkMode;
-  readonly walletBaseURL = "https://api.bitkubnext.io/wallets";
-  readonly accountsBaseURL = "https://api.bitkubnext.io/accounts";
-  constructor(clientId: string, network: NetworkMode) {
+  private readonly walletBaseURL = "https://api.bitkubnext.io/wallets";
+  private readonly accountsBaseURL = "https://api.bitkubnext.io/accounts";
+
+  constructor({ clientId, network }: BitkubNextCallerOptions) {
     this.clientId = clientId;
     this.network = network;
   }
 
-  public async callContract(
-    accessToken: string,
-    contractAddr: string,
-    methodName: string,
-    methodParams: string[],
-  ): Promise<BitkubNextTXResponse> {
+  public async callContract({
+    contractAddr,
+    methodName,
+    methodParams,
+  }: ContractCall): Promise<BitkubNextTXResponse> {
     try {
-      if (!accessToken) return Promise.reject("No access token");
+      const accessToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
+      if (!accessToken) {
+        throw new Error("No access token");
+      }
+
       const queueId = await this.requestApproval(
         accessToken,
         contractAddr,
         methodName,
         methodParams,
       );
-      const tx = await this.waitBKTx(accessToken, queueId);
+
+      await this.waitBKTx(accessToken, queueId);
       const receipt = await (await this.wrapTx(accessToken, queueId)).wait();
 
       // wait for 15 seconds to make sure the transaction is confirmed
@@ -45,6 +53,28 @@ export class BitkubNextCaller {
     }
   }
 
+  public async createTxQueueApproval({
+    accessToken,
+    approvalToken,
+  }: {
+    accessToken: string;
+    approvalToken: string;
+  }) {
+    const url = `${this.walletBaseURL}/transactions/queue/approval`;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      "x-next-client-id": this.clientId ? this.clientId : "",
+    };
+
+    const body = new URLSearchParams({
+      approve_token: approvalToken,
+    });
+
+    return axios
+      .post(url, body, { headers })
+      .then((res) => res.data as { queue_id: string });
+  }
+
   private async requestApproval(
     accessToken: string,
     contractAddr: string,
@@ -54,16 +84,16 @@ export class BitkubNextCaller {
     try {
       const callbackUrl = `${window.origin}/callback`;
       const newWindow = window.open(
-        `${window.origin}/callback-loading`,
+        `${window.origin}/callback/loading`,
         "_blank",
         `toolbar=no,
-            location=no,
-            status=no,
-            menubar=no,
-            scrollbars=yes,
-            resizable=yes,
-            width=400px,
-            height=600px`,
+          location=no,
+          status=no,
+          menubar=no,
+          scrollbars=yes,
+          resizable=yes,
+          width=400px,
+          height=600px`,
       );
       const res = await this.createApprovalURL(
         accessToken,
@@ -106,11 +136,13 @@ export class BitkubNextCaller {
 
     const headers = {
       Authorization: `Bearer ${accessToken}`,
-      "x-next-client-id": this.clientId ? String(this.clientId) : "",
+      "x-next-client-id": this.clientId ? this.clientId : "",
     };
 
+    const network = this.network === "testnet" ? "BKC_TESTNET" : "BKC_MAINNET";
+
     const body = {
-      chain: this.network,
+      chain: network,
       type: "CONTRACT_CALL",
       description: description,
       callback_url: callbackUrl,
@@ -119,13 +151,10 @@ export class BitkubNextCaller {
       contract_method_params: methodParams,
     };
 
-    const data = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(body),
-    });
-
-    return data.json() as Promise<ApprovalResponse>;
+    /* There's something wrong with methodParams on Fetch API, So we need to use axios */
+    return axios
+      .post(url, body, { headers })
+      .then((res) => res.data as ApprovalResponse);
   }
 
   private async waitBKTx(
@@ -173,8 +202,8 @@ export class BitkubNextCaller {
       Authorization: `Bearer ${accessToken}`,
       "x-next-client-id": this.clientId ? String(this.clientId) : "",
     };
-    const IdNoQuote = id.replace(/"/g, "");
-    let url = `${this.walletBaseURL}/transactions/queue/${IdNoQuote}`;
+    // const IdNoQuote = id.replace(/"/g, "");
+    let url = `${this.walletBaseURL}/transactions/queue/${id}`;
     const data = (await (
       await fetch(url, { headers })
     ).json()) as BitkubNextTXResponse;
