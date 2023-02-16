@@ -42,3 +42,33 @@ export type AccountInformationType = {
   };
   ok: boolean;
 };
+
+export type BitkubNextTXResponse = {
+  abi: string;
+  confirmations: number;
+  contract_address: string;
+  created_time: string;
+  error_message: string;
+  input: [];
+  network: string;
+  queue_id: string;
+  status: string;
+  tx: string;
+  transactionHash: string;
+};
+
+export enum BitkubNextTXStatus {
+  BROADCASTED = "BROADCASTED",
+  SUCCESS = "SUCCESS",
+  PENDING = "PENDING",
+  FAILURE = "FAILURE",
+}
+
+export type ApprovalResponse = {
+  ok: boolean;
+  data: {
+    id: string;
+    approve_url: string;
+    expires_in: number;
+  };
+};
