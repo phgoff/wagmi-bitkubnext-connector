@@ -75,7 +75,7 @@ export type ApprovalResponse = {
 
 export type BitkubNextCallerOptions = {
   clientId: string;
-  network: NetworkMode;
+  networkMode: NetworkMode;
 };
 
 export type ContractCall = {

@@ -151,6 +151,7 @@ export const connectBitkubNext = async (
     const address = information.data.wallet_address;
     return address;
   } catch (err) {
+    console.error("connectBitkubNext error", err);
     throw new Error("Can not connect to Bitkub Next");
   }
 };

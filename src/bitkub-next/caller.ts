@@ -13,16 +13,16 @@ import axios from "axios";
 // BitkubNextCaller is a class that handles the communication with Bitkub Next Wallet.
 export class BitkubNextCaller {
   clientId: string;
-  network: NetworkMode;
+  networkMode: NetworkMode;
   private readonly walletBaseURL = "https://api.bitkubnext.io/wallets";
   private readonly accountsBaseURL = "https://api.bitkubnext.io/accounts";
 
-  constructor({ clientId, network }: BitkubNextCallerOptions) {
+  constructor({ clientId, networkMode }: BitkubNextCallerOptions) {
     this.clientId = clientId;
-    this.network = network;
+    this.networkMode = networkMode;
   }
 
-  public async callContract({
+  public async send({
     contractAddr,
     methodName,
     methodParams,
@@ -48,8 +48,8 @@ export class BitkubNextCaller {
 
       return { ...receipt, transactionHash: receipt.tx };
     } catch (e: any) {
-      console.error("call contract error:", e);
-      throw new Error(e?.error?.message ?? e);
+      console.error("send transaction:", e);
+      throw e;
     }
   }
 
@@ -59,7 +59,7 @@ export class BitkubNextCaller {
   }: {
     accessToken: string;
     approvalToken: string;
-  }) {
+  }): Promise<{ queue_id: string }> {
     const url = `${this.walletBaseURL}/transactions/queue/approval`;
     const headers = {
       Authorization: `Bearer ${accessToken}`,
@@ -139,7 +139,8 @@ export class BitkubNextCaller {
       "x-next-client-id": this.clientId ? this.clientId : "",
     };
 
-    const network = this.network === "testnet" ? "BKC_TESTNET" : "BKC_MAINNET";
+    const network =
+      this.networkMode === "testnet" ? "BKC_TESTNET" : "BKC_MAINNET";
 
     const body = {
       chain: network,
@@ -202,11 +203,10 @@ export class BitkubNextCaller {
       Authorization: `Bearer ${accessToken}`,
       "x-next-client-id": this.clientId ? String(this.clientId) : "",
     };
-    // const IdNoQuote = id.replace(/"/g, "");
     let url = `${this.walletBaseURL}/transactions/queue/${id}`;
-    const data = (await (
-      await fetch(url, { headers })
-    ).json()) as BitkubNextTXResponse;
-    return data;
+
+    const resp = await fetch(url, { headers });
+    const data = await resp.json();
+    return data as BitkubNextTXResponse;
   }
 }
