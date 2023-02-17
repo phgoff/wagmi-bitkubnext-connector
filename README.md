@@ -48,15 +48,19 @@ const client = createClient({
 
 ## Set up callback pages
 
-you will need to set up a callback pages before using the connector and caller.
+You will need to set up a callback pages before using the connector and caller.
 
 ### `BitkubnextConnector `
 
-to use the connector you will need to set up a [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/oauth/callback) to receive the access token and login to the wallet.
+1. create a callback page at `/pages/oauth/callback.tsx`
+2. set up a [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/oauth/callback.tsx) to receive the access token and login to the wallet.
 
 ### `BitkubNextCaller`
 
-to use the caller you will need to set up a these [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/callback) to send the transaction.
+1. create a callback folder `/pages/callback`
+2. set up these [callback pages](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/callback) to send the transaction.
+
+#### Send transaction
 
 ```tsx
 async function handleSendTransaction() {
