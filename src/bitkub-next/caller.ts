@@ -8,7 +8,6 @@ import {
 } from "./types";
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
-import axios from "axios";
 
 // BitkubNextCaller is a class that handles the communication with Bitkub Next Wallet.
 export class BitkubNextCaller {
@@ -47,7 +46,7 @@ export class BitkubNextCaller {
       await new Promise((resolve) => setTimeout(resolve, 1000 * 15));
 
       return { ...receipt, transactionHash: receipt.tx };
-    } catch (e: any) {
+    } catch (e) {
       console.error("send transaction:", e);
       throw e;
     }
@@ -62,17 +61,68 @@ export class BitkubNextCaller {
   }): Promise<{ queue_id: string }> {
     const url = `${this.walletBaseURL}/transactions/queue/approval`;
     const headers = {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
       "x-next-client-id": this.clientId ? this.clientId : "",
     };
 
-    const body = new URLSearchParams({
+    const body = {
       approve_token: approvalToken,
+    };
+
+    try {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+      return resp.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private async createApprovalURL(
+    accessToken: string,
+    callbackUrl: string,
+    contractAddress: string,
+    methodName: string,
+    methodParams: string[],
+  ): Promise<ApprovalResponse> {
+    const url = `${this.accountsBaseURL}/approvals`;
+
+    const rawDescription = `send ${methodName}(${methodParams.join(", ")})`;
+    const description =
+      rawDescription.length > 128
+        ? rawDescription.substring(0, 125) + "..."
+        : rawDescription;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-next-client-id": this.clientId ? this.clientId : "",
+    };
+
+    const network =
+      this.networkMode === "testnet" ? "BKC_TESTNET" : "BKC_MAINNET";
+
+    const body = {
+      chain: network,
+      type: "CONTRACT_CALL",
+      description: description,
+      callback_url: callbackUrl,
+      contract_address: contractAddress,
+      contract_method_name: methodName,
+      contract_method_params: methodParams,
+    };
+
+    const resp = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
     });
 
-    return axios
-      .post(url, body, { headers })
-      .then((res) => res.data as { queue_id: string });
+    return resp.json();
   }
 
   private async requestApproval(
@@ -117,45 +167,6 @@ export class BitkubNextCaller {
     } catch (e) {
       throw e;
     }
-  }
-
-  private async createApprovalURL(
-    accessToken: string,
-    callbackUrl: string,
-    contractAddress: string,
-    methodName: string,
-    methodParams: string[],
-  ) {
-    const url = `${this.accountsBaseURL}/approvals`;
-
-    const rawDescription = `send ${methodName}(${methodParams.join(", ")})`;
-    const description =
-      rawDescription.length > 128
-        ? rawDescription.substring(0, 125) + "..."
-        : rawDescription;
-
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-      "x-next-client-id": this.clientId ? this.clientId : "",
-    };
-
-    const network =
-      this.networkMode === "testnet" ? "BKC_TESTNET" : "BKC_MAINNET";
-
-    const body = {
-      chain: network,
-      type: "CONTRACT_CALL",
-      description: description,
-      callback_url: callbackUrl,
-      contract_address: contractAddress,
-      contract_method_name: methodName,
-      contract_method_params: methodParams,
-    };
-
-    /* There's something wrong with methodParams on Fetch API, So we need to use axios */
-    return axios
-      .post(url, body, { headers })
-      .then((res) => res.data as ApprovalResponse);
   }
 
   private async waitBKTx(
