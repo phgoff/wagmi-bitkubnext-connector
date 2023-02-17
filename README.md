@@ -2,7 +2,7 @@
 
 Use a bitkubnext wallet as a wagmi connector!
 
-- BitkubnextConnector - Wagmi connector for bitkubnext
+- BitkubNextConnector - Wagmi connector for bitkubnext
 - BitkubNextCaller - To interact with smart contracts on bitkubnext
 
 ## Installation
@@ -48,13 +48,15 @@ const client = createClient({
 
 ## Set up callback pages
 
+you will need to set up a callback pages before using the connector and caller.
+
 ### `BitkubnextConnector `
 
-you will need to set up a [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/oauth/callback) to receive the access token and login to the wallet.
+to use the connector you will need to set up a [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/oauth/callback) to receive the access token and login to the wallet.
 
 ### `BitkubNextCaller`
 
-you will need to set up a these [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/callback) to send the transaction.
+to use the caller you will need to set up a these [callback page](https://github.com/phgoff/wagmi-bitkubnext-connector/tree/main/example/pages/callback) to send the transaction.
 
 ```tsx
 async function handleSendTransaction() {
