@@ -1,5 +1,11 @@
 # wagmi-bitkubnext-connector
 
+## 0.3.1
+
+### Patch Changes
+
+- fix condition for refresh token in connect Bitkub next
+
 ## 0.3.0
 
 ### Minor Changes
