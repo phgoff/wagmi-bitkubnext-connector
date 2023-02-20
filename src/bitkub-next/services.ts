@@ -109,7 +109,7 @@ export const connectBitkubNext = async (
   let refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
 
   try {
-    if (refreshToken) {
+    if (refreshToken && refreshToken !== "undefined") {
       const resultRefreshToken = await exchangeRefreshToken(
         clientId,
         refreshToken,
