@@ -15,17 +15,20 @@ export const useCreateQueue = (
           accessToken,
           approvalToken,
         });
-        localStorage.setItem(storageKey.TX_QUEUE_ID, res.queue_id);
+        localStorage.setItem(
+          storageKey.TX_QUEUE_ID,
+          JSON.stringify(res.queue_id),
+        );
       }
     } catch (e: any) {
       localStorage.removeItem(storageKey.TX_QUEUE_ID);
-      localStorage.setItem(storageKey.TX_ERROR, e.response);
+      localStorage.setItem(storageKey.TX_ERROR, JSON.stringify(e.response));
     }
 
     const countdownCloseWindow = setTimeout(() => {
       window.close();
       clearTimeout(countdownCloseWindow);
-    }, 3000);
+    }, 2000);
   }, [approvalToken]);
 
   useEffect(() => {
