@@ -1,5 +1,11 @@
 # wagmi-bitkubnext-connector
 
+## 0.3.2
+
+### Patch Changes
+
+- fix bug access token expired
+
 ## 0.3.1
 
 ### Patch Changes
