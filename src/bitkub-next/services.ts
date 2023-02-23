@@ -40,7 +40,10 @@ const getOAuth2AuthorizeURL = (clientId: string, redirectURI: string) => {
   return url;
 };
 
-const exchangeRefreshToken = async (clientId: string, refreshToken: string) => {
+export const exchangeRefreshToken = async (
+  clientId: string,
+  refreshToken: string,
+) => {
   try {
     const url = `${BITKUB_ACCOUNT_URL}/oauth2/access_token`;
     const headers = {
@@ -60,7 +63,6 @@ const exchangeRefreshToken = async (clientId: string, refreshToken: string) => {
       body,
     });
     const result: RefreshTokenType = await response.json();
-
     return result;
   } catch (error) {
     throw error;
@@ -109,7 +111,7 @@ export const connectBitkubNext = async (
   let refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
 
   try {
-    if (refreshToken && refreshToken !== "undefined") {
+    if (refreshToken) {
       const resultRefreshToken = await exchangeRefreshToken(
         clientId,
         refreshToken,
