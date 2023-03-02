@@ -15,7 +15,6 @@ export const useCreateQueue = (
           accessToken,
           approvalToken,
         });
-        alert(JSON.stringify(res));
         if (res.queue_id) {
           localStorage.setItem(
             storageKey.TX_QUEUE_ID,
