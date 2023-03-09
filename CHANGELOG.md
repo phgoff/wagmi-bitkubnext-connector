@@ -1,5 +1,11 @@
 # wagmi-bitkubnext-connector
 
+## 0.3.3
+
+### Patch Changes
+
+- fix error get queue id
+
 ## 0.3.2
 
 ### Patch Changes

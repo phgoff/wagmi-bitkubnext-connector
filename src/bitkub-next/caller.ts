@@ -8,19 +8,25 @@ import {
 } from "./types";
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
-import { exchangeRefreshToken } from "./services";
-import jwt from "jsonwebtoken";
+import { updateToken } from "./utils/checkAccessToken";
 
+interface Options {
+  networkMode: NetworkMode;
+  clientId: string;
+  oauthRedirectURI: string;
+}
 // BitkubNextCaller is a class that handles the communication with Bitkub Next Wallet.
-export class BitkubNextCaller {
+export class BitkubNextCaller implements Options {
   clientId: string;
   networkMode: NetworkMode;
+  oauthRedirectURI: string;
   private readonly walletBaseURL = "https://api.bitkubnext.io/wallets";
   private readonly accountsBaseURL = "https://api.bitkubnext.io/accounts";
 
-  constructor({ clientId, networkMode }: BitkubNextCallerOptions) {
+  constructor({ clientId, networkMode, oauthRedirectURI }: Options) {
     this.clientId = clientId;
     this.networkMode = networkMode;
+    this.oauthRedirectURI = oauthRedirectURI;
   }
 
   public async send({
@@ -29,9 +35,8 @@ export class BitkubNextCaller {
     methodParams,
   }: ContractCall): Promise<BitkubNextTXResponse> {
     try {
-      await this.checkAccessToken();
+      await updateToken(this.clientId, this.oauthRedirectURI);
       const accessToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
-
       if (!accessToken) {
         throw new Error("No access token");
       }
@@ -62,7 +67,11 @@ export class BitkubNextCaller {
   }: {
     accessToken: string;
     approvalToken: string;
-  }): Promise<{ queue_id: string }> {
+  }): Promise<{
+    queue_id?: string;
+    ok?: boolean;
+    error?: { statusCode: number; message: string };
+  }> {
     const url = `${this.walletBaseURL}/transactions/queue/approval`;
     const headers = {
       "Content-Type": "application/json",
@@ -223,24 +232,5 @@ export class BitkubNextCaller {
     const resp = await fetch(url, { headers });
     const data = await resp.json();
     return data as BitkubNextTXResponse;
-  }
-
-  private async checkAccessToken() {
-    const accessToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
-    if (!accessToken) throw new Error("access token not found");
-
-    const decoded = jwt.decode(accessToken);
-    if (decoded && typeof decoded === "object" && "exp" in decoded) {
-      if (decoded.exp !== undefined && decoded.exp < Date.now() / 1000) {
-        const refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
-        if (!refreshToken) throw new Error("refresh token not found");
-        const newToken = await exchangeRefreshToken(
-          this.clientId,
-          refreshToken,
-        );
-        localStorage.setItem(storageKey.ACCESS_TOKEN, newToken.access_token);
-        localStorage.setItem(storageKey.REFRESH_TOKEN, newToken.refresh_token);
-      }
-    }
   }
 }

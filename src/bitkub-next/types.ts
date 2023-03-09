@@ -14,6 +14,8 @@ export type RefreshTokenType = {
   refresh_token: string;
   scope: Array<unknown> | null;
   token_type: string;
+  ok?: boolean;
+  error?: { statusCode: number; message: string; error: string };
 };
 
 export type AccountInformationType = {

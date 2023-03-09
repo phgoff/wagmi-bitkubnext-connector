@@ -6,6 +6,7 @@ import type {
 
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
+import { updateToken } from "./utils/checkAccessToken";
 
 const BITKUB_ACCOUNT_URL = "https://accounts.bitkubnext.com";
 const BITKUB_ACCOUNT_API = "https://api.bitkubnext.io/accounts";
@@ -29,7 +30,10 @@ const getAccountInformation = async (
   }
 };
 
-const getOAuth2AuthorizeURL = (clientId: string, redirectURI: string) => {
+export const getOAuth2AuthorizeURL = (
+  clientId: string,
+  redirectURI: string,
+) => {
   const encodedRedirectUrl = encodeURIComponent(redirectURI);
   const url =
     BITKUB_ACCOUNT_URL +
@@ -93,7 +97,6 @@ export const exchangeAuthorizationCode = async (
       body,
     });
     const result: AccessTokenType = await response.json();
-
     return result;
   } catch (error) {
     throw error;
@@ -111,19 +114,13 @@ export const connectBitkubNext = async (
   let refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
 
   try {
-    if (refreshToken) {
-      const resultRefreshToken = await exchangeRefreshToken(
-        clientId,
-        refreshToken,
-      );
-      accountToken = resultRefreshToken.access_token;
-      refreshToken = resultRefreshToken.refresh_token;
+    if (refreshToken && accountToken) {
+      await updateToken(clientId, redirectURI);
     } else {
       const authorizeBitkubNextUrl = getOAuth2AuthorizeURL(
         clientId,
         redirectURI,
       );
-
       const windowFeatures =
         "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,left=200,top=200,width=400,height=600";
       const tapWindow = window.open(
@@ -141,19 +138,17 @@ export const connectBitkubNext = async (
       if (!resultToken.access_token || !resultToken.refresh_token) {
         throw Error("Token not found");
       }
-
-      accountToken = resultToken.access_token;
-      refreshToken = resultToken.refresh_token;
+      localStorage.setItem(storageKey.ACCESS_TOKEN, resultToken.access_token);
+      localStorage.setItem(storageKey.REFRESH_TOKEN, resultToken.refresh_token);
     }
 
-    localStorage.setItem(storageKey.ACCESS_TOKEN, accountToken);
-    localStorage.setItem(storageKey.REFRESH_TOKEN, refreshToken);
-
-    const information = await getAccountInformation(accountToken);
-    const address = information.data.wallet_address;
-    return address;
+    accountToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
+    if (accountToken) {
+      const information = await getAccountInformation(accountToken!);
+      const address = information.data.wallet_address;
+      return address;
+    }
   } catch (err) {
-    console.error("connectBitkubNext error", err);
-    throw new Error("Can not connect to Bitkub Next");
+    throw new Error("Cannot connect to Bitkub Next");
   }
 };

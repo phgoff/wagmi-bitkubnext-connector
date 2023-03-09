@@ -15,10 +15,14 @@ export const useCreateQueue = (
           accessToken,
           approvalToken,
         });
-        localStorage.setItem(
-          storageKey.TX_QUEUE_ID,
-          JSON.stringify(res.queue_id),
-        );
+        if (res.queue_id) {
+          localStorage.setItem(
+            storageKey.TX_QUEUE_ID,
+            JSON.stringify(res.queue_id),
+          );
+        } else {
+          localStorage.setItem(storageKey.TX_ERROR, JSON.stringify(res.error));
+        }
       }
     } catch (e: any) {
       localStorage.removeItem(storageKey.TX_QUEUE_ID);
@@ -28,7 +32,7 @@ export const useCreateQueue = (
     const countdownCloseWindow = setTimeout(() => {
       window.close();
       clearTimeout(countdownCloseWindow);
-    }, 2000);
+    }, 1000);
   }, [approvalToken]);
 
   useEffect(() => {
