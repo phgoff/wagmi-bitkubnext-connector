@@ -8,18 +8,25 @@ import {
 } from "./types";
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
-import { checkAccessToken, updateToken } from "./utils/checkAccessToken";
+import { updateToken } from "./utils/checkAccessToken";
 
+interface Options {
+  networkMode: NetworkMode;
+  clientId: string;
+  oauthRedirectURI: string;
+}
 // BitkubNextCaller is a class that handles the communication with Bitkub Next Wallet.
-export class BitkubNextCaller {
+export class BitkubNextCaller implements Options {
   clientId: string;
   networkMode: NetworkMode;
+  oauthRedirectURI: string;
   private readonly walletBaseURL = "https://api.bitkubnext.io/wallets";
   private readonly accountsBaseURL = "https://api.bitkubnext.io/accounts";
 
-  constructor({ clientId, networkMode }: BitkubNextCallerOptions) {
+  constructor({ clientId, networkMode, oauthRedirectURI }: Options) {
     this.clientId = clientId;
     this.networkMode = networkMode;
+    this.oauthRedirectURI = oauthRedirectURI;
   }
 
   public async send({
@@ -28,7 +35,7 @@ export class BitkubNextCaller {
     methodParams,
   }: ContractCall): Promise<BitkubNextTXResponse> {
     try {
-      await updateToken(this.clientId);
+      await updateToken(this.clientId, this.oauthRedirectURI);
       const accessToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
       if (!accessToken) {
         throw new Error("No access token");

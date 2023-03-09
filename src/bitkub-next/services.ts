@@ -30,7 +30,10 @@ const getAccountInformation = async (
   }
 };
 
-const getOAuth2AuthorizeURL = (clientId: string, redirectURI: string) => {
+export const getOAuth2AuthorizeURL = (
+  clientId: string,
+  redirectURI: string,
+) => {
   const encodedRedirectUrl = encodeURIComponent(redirectURI);
   const url =
     BITKUB_ACCOUNT_URL +
@@ -94,7 +97,6 @@ export const exchangeAuthorizationCode = async (
       body,
     });
     const result: AccessTokenType = await response.json();
-
     return result;
   } catch (error) {
     throw error;
@@ -112,8 +114,8 @@ export const connectBitkubNext = async (
   let refreshToken = localStorage.getItem(storageKey.REFRESH_TOKEN);
 
   try {
-    if (refreshToken) {
-      updateToken(clientId);
+    if (refreshToken && accountToken) {
+      await updateToken(clientId, redirectURI);
     } else {
       const authorizeBitkubNextUrl = getOAuth2AuthorizeURL(
         clientId,
@@ -141,12 +143,12 @@ export const connectBitkubNext = async (
     }
 
     accountToken = localStorage.getItem(storageKey.ACCESS_TOKEN);
-    const information = await getAccountInformation(accountToken!);
-    const address = information.data.wallet_address;
-    return address;
+    if (accountToken) {
+      const information = await getAccountInformation(accountToken!);
+      const address = information.data.wallet_address;
+      return address;
+    }
   } catch (err) {
-    // console.error("connectBitkubNext error", err);
-    // throw new Error("Can not connect to Bitkub Next");
-    localStorage.clear();
+    throw new Error("Cannot connect to Bitkub Next");
   }
 };
