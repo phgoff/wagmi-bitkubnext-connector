@@ -5,6 +5,7 @@
 ### Patch Changes
 
 - fix error get queue id
+- update bitkubnext caller params
 
 ## 0.3.2
 

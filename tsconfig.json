@@ -10,7 +10,8 @@
     "outDir": "dist",
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noEmit": true
   },
   "include": ["src/**/*"]
 }
