@@ -21,6 +21,7 @@ import { BitkubNextConnector, BitkubNextCaller } from "wagmi-bitkubnext-connecto
 export const bitkubnextCaller = new BitkubNextCaller({
   clientId: // <YOUR_CLIENT_ID>,
   networkMode: // <YOUR_NETWORK_MODE>,
+  oauthRedirectURI: //<YOUR_REDIRECT_URI>,
 });
 
 const client = createClient({
@@ -28,8 +29,8 @@ const client = createClient({
     new BitkubNextConnector({
       options: {
         clientId: // <YOUR_CLIENT_ID>,
-        oauthRedirectURI: //<YOUR_REDIRECT_URI>,
         networkMode: // <YOUR_NETWORK_MODE>,
+        oauthRedirectURI: //<YOUR_REDIRECT_URI>,
       },
     }),
   ],

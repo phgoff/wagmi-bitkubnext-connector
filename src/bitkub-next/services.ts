@@ -6,7 +6,7 @@ import type {
 
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
-import { updateToken } from "./utils/checkAccessToken";
+import { updateToken } from "./utils/check-access-token";
 
 const BITKUB_ACCOUNT_URL = "https://accounts.bitkubnext.com";
 const BITKUB_ACCOUNT_API = "https://api.bitkubnext.io/accounts";

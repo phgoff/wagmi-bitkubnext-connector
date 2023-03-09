@@ -8,7 +8,7 @@ import {
 } from "./types";
 import { storageKey } from "./constants";
 import { requestWindow } from "./utils/request-window";
-import { updateToken } from "./utils/checkAccessToken";
+import { updateToken } from "./utils/check-access-token";
 
 interface Options {
   networkMode: NetworkMode;
